@@ -10,6 +10,7 @@ namespace MathApp
     {
         static void Main(string[] args)
         {
+            Console.WriteLine("Hello World");
         }
     }
 }

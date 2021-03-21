@@ -1,4 +1,5 @@
-﻿using MathApp.Shapes;
+﻿using MathApp.Data;
+using MathApp.Shapes;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -12,48 +13,31 @@ namespace MathApp
     {
         static void Main(string[] args)
         {
-            var serializerOpts = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
-            var db = new Data.InMemoryDataContext();
+            var db = new InMemoryDataContext();
             var shapesUnsorted = db.GetAllShapes();
-            var shapesByArea = db.GetAllShapes().OrderBy(s => s.Area);
-            var shapesByParimiter = db.GetAllShapes().OrderBy(s => s.Perimeter);
+            var shapesByArea = db.GetAllShapes(SortBy.Area);
+            var shapesByParimiter = db.GetAllShapes(SortBy.Parimiter);
 
             DisplayShapes("=== Shapes Unsorted ===", shapesUnsorted);
             DisplayShapes("=== Shapes By Area ===", shapesByArea);
             DisplayShapes("=== Shapes By Parimiter ===", shapesByParimiter);
 
-            string json = JsonConvert.SerializeObject(shapesUnsorted, serializerOpts);
-            Console.WriteLine($"\n=== Json Serialized ===\n{json}");
-            var deserializedShapes = JsonConvert.DeserializeObject<List<IShape>>(json, serializerOpts);
+            IEnumerable<IShape> deserializedShapes = SerializeDeserialize(shapesUnsorted);
             DisplayShapes("=== Deserialized Shapes ===", deserializedShapes);
 
-            Console.WriteLine("\n=== Shape Data Stats ===");
-            var totalShapes = deserializedShapes.Count();
-            var numCircles = deserializedShapes.Where(s => s.ShapeType == ShapeType.Circle).Count();
-            var numTriangles = deserializedShapes.Where(s => s.ShapeType == ShapeType.Triangle).Count();
-            var numIsosceles = deserializedShapes.Where(s => s.ShapeType == ShapeType.Triangle && s.SubType == "Isosceles").Count();
-            var numEqualateral = deserializedShapes.Where(s => s.ShapeType == ShapeType.Triangle && s.SubType == "Equalateral").Count();
-            var numScalene = deserializedShapes.Where(s => s.ShapeType == ShapeType.Triangle && s.SubType == "Scalene").Count();
-            var numQuadrilaterals = deserializedShapes.Where(s => s.ShapeType == ShapeType.Quadrilateral).Count();
-            var numSquares = deserializedShapes.Where(s => s.ShapeType == ShapeType.Quadrilateral && s.SubType == "Square").Count();
-            var numRects = deserializedShapes.Where(s => s.ShapeType == ShapeType.Quadrilateral && s.SubType == "Rectangle").Count();
-            var unkownTypes = deserializedShapes.Where(s => s.ShapeType == ShapeType.Unknown || s.SubType == "Unknown").Count();
-
-            Console.WriteLine($"Circles       : {numCircles}\n\n" +
-                              $"Triangles     : {numTriangles}\n" +
-                              $"--Isosceles   : {numIsosceles}\n" +
-                              $"--Equalateral : {numEqualateral}\n" +
-                              $"--Scalene     : {numScalene}\n\n" +
-                              $"Quadrilaterals: {numQuadrilaterals}\n" +
-                              $"--Squares     : {numSquares}\n" +
-                              $"--Rectangles  : {numRects}\n\n" +
-                              $"Total Shapes  : {totalShapes}\n" +
-                              $"Unknown Shapes: {unkownTypes}");
+            DisplayDataStats("=== Shape Data Stats ===", deserializedShapes);
 
             Console.ReadLine();
-
         }
 
+        private static IEnumerable<IShape> SerializeDeserialize(IEnumerable<IShape> shapes)
+        {
+            var serializerOpts = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
+            string json = JsonConvert.SerializeObject(shapes, serializerOpts);
+            Console.WriteLine($"\n=== Json Serialized ===\n{json}");
+            var deserializedShapes = JsonConvert.DeserializeObject<IEnumerable<IShape>>(json, serializerOpts);
+            return deserializedShapes;
+        }
         static void DisplayShapes(string title, IEnumerable<IShape> shapes)
         {
             const int pdName = 35;
@@ -67,6 +51,37 @@ namespace MathApp
                     $"{s.FullName.PadRight(pdName)}" +
                     $"{s.Area:f5}".PadLeft(pdData) +
                     $"{s.Perimeter:f5}".PadLeft(pdData));
+        }
+        static void DisplayDataStats(string title, IEnumerable<IShape> shapes)
+        {
+            Console.WriteLine($"\n{title}");
+            var totalShapes = shapes.Count();
+            var numCircles = shapes.Where(s => s.ShapeType == ShapeType.Circle).Count();
+            var numFlat = shapes.Where(s => s.ShapeType == ShapeType.Circle && s.SubType == "Flat").Count();
+            var numSpheres = shapes.Where(s => s.ShapeType == ShapeType.Circle && s.SubType == "Sphere").Count();
+            var numCyl = shapes.Where(s => s.ShapeType == ShapeType.Circle && s.SubType == "Cylinder").Count();
+            var numTriangles = shapes.Where(s => s.ShapeType == ShapeType.Triangle).Count();
+            var numIsosceles = shapes.Where(s => s.ShapeType == ShapeType.Triangle && s.SubType == "Isosceles").Count();
+            var numEqualateral = shapes.Where(s => s.ShapeType == ShapeType.Triangle && s.SubType == "Equalateral").Count();
+            var numScalene = shapes.Where(s => s.ShapeType == ShapeType.Triangle && s.SubType == "Scalene").Count();
+            var numQuadrilaterals = shapes.Where(s => s.ShapeType == ShapeType.Quadrilateral).Count();
+            var numSquares = shapes.Where(s => s.ShapeType == ShapeType.Quadrilateral && s.SubType == "Square").Count();
+            var numRects = shapes.Where(s => s.ShapeType == ShapeType.Quadrilateral && s.SubType == "Rectangle").Count();
+            var unkownTypes = shapes.Where(s => s.ShapeType == ShapeType.Unknown || s.SubType == "Unknown").Count();
+
+            Console.WriteLine($"Circles       : {numCircles}\n" +
+                              $"--Flat        : {numFlat}\n" +
+                              $"--Spheres     : {numSpheres}\n" +
+                              $"--Cylinders   : {numCyl}\n\n" +
+                              $"Triangles     : {numTriangles}\n" +
+                              $"--Isosceles   : {numIsosceles}\n" +
+                              $"--Equalateral : {numEqualateral}\n" +
+                              $"--Scalene     : {numScalene}\n\n" +
+                              $"Quadrilaterals: {numQuadrilaterals}\n" +
+                              $"--Squares     : {numSquares}\n" +
+                              $"--Rectangles  : {numRects}\n\n" +
+                              $"Total Shapes  : {totalShapes}\n" +
+                              $"Unknown Shapes: {unkownTypes}");
         }
     }
 }

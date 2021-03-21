@@ -13,4 +13,10 @@ namespace MathApp.Shapes
         Triangle,
         Quadrilateral
     }
+    public enum CircleType
+    {
+        Flat,
+        Sphere,
+        Cylinder
+    }
 }

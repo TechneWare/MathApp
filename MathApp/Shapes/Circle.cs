@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,10 +11,14 @@ namespace MathApp.Shapes
     {
         public override double Perimeter => 2 * Math.PI * Radius;
         public override double Area => Math.PI * Math.Pow(Radius, 2);
-        public double Radius { get { return Sides[0]; } }
+        public double Radius => Sides[0];
 
         public Circle(string name, double Radius) : base(name: name, new double[] { Radius }, ShapeType.Circle, "")
         {
+            this.SubType = CircleType.Flat.ToString();
         }
+    
+        [JsonConstructor]
+        public Circle(string name, double[] Sides) : base(name: name, Sides, ShapeType.Circle, "") { }
     }
 }

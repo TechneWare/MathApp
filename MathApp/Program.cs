@@ -14,28 +14,16 @@ namespace MathApp
     {
         static void Main(string[] args)
         {
-            var availableCommands = GetAvailableCommands();
+            var availableCommands = Utils.GetAvailableCommands();
             var parser = new CommandParser(availableCommands, new InMemoryDataContext());
 
-            string[] startupCommands =
-            {
-                "Get",
-                "Get area",
-                "Get parimiter",
-                "JsonDemo",
-                "Stats"
-            };
-
-            foreach (var cmd in startupCommands)
-            {
-                var c = parser.ParseCommand(cmd.Split(' '));
-                if (c != null)
-                    c.Execute();
-            }
+            //Run Startup - demo all commands
+            parser.ParseCommand(new string[] { "RunAll" }).Execute();
 
             Console.WriteLine("\n\n=== Welcome to the coding demo ===");
             Console.WriteLine("== Startup Complete: Press ENTER for usage or Q to to quit ==");
-            var lastCommand = "";
+
+            ICommand lastCommand = null;
             do
             {
                 Console.Write($"$ ");
@@ -43,47 +31,17 @@ namespace MathApp
                 args = commandInput.Split(' ');
 
                 if (args.Length == 0 || string.IsNullOrEmpty(args[0]))
-                    PrintUsage(availableCommands);
+                    Utils.PrintUsage(availableCommands);
                 else
                 {
-
                     var command = parser.ParseCommand(args);
-
                     if (command != null)
                     {
-                        lastCommand = command.GetType().ToString();
+                        lastCommand = command;
                         command.Execute();
                     }
                 }
-            } while (lastCommand != "MathApp.Commands.QuitCommand");
-        }
-
-        static IEnumerable<ICommandFactory> GetAvailableCommands()
-        {
-            return new ICommandFactory[]
-            {
-                new QuitCommand(),
-                new ClearScreenCommand(),
-                new GetCommand(),
-                new JsonCommand(),
-                new StatsCommand()
-            };
-        }
-        private static void PrintUsage(IEnumerable<ICommandFactory> availableCommands)
-        {
-            Console.WriteLine("\n\nUsage: commandName Arguments");
-            Console.WriteLine("Commands:");
-            foreach (var command in availableCommands)
-            {
-                Console.WriteLine($"{command.CommandName} {command.CommandArgs}\t- {command.Description}");
-                if (command.CommandAlternates.Any())
-                {
-                    Console.WriteLine("\tAlternates:");
-                    foreach (var altCommand in command.CommandAlternates)
-                        Console.WriteLine($"\t  {altCommand}");
-                }
-            }
-            Console.WriteLine("\n\n");
+            } while (lastCommand == null || lastCommand.GetType() != typeof(QuitCommand));
         }
     }
 }

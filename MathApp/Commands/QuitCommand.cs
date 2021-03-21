@@ -19,7 +19,7 @@ namespace MathApp.Commands
 
         public void Execute()
         {
-            return;
+            Console.WriteLine("Thank you for running this program, have a nice day!!");
         }
 
         public ICommand MakeCommand(string[] args)

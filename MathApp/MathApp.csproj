@@ -51,6 +51,7 @@
     <Compile Include="Commands\ClearScreenCommand.cs" />
     <Compile Include="Commands\CommandParser.cs" />
     <Compile Include="Commands\QuitCommand.cs" />
+    <Compile Include="Commands\RunAllCommand.cs" />
     <Compile Include="Commands\StatsCommand.cs" />
     <Compile Include="Commands\Utils.cs" />
     <Compile Include="Commands\GetCommand.cs" />

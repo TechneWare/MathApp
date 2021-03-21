@@ -9,6 +9,34 @@ namespace MathApp.Commands
 {
     public static class Utils
     {
+        public static IEnumerable<ICommandFactory> GetAvailableCommands()
+        {
+            return new ICommandFactory[]
+            {
+                new QuitCommand(),
+                new ClearScreenCommand(),
+                new GetCommand(),
+                new JsonCommand(),
+                new StatsCommand(),
+                new RunAllCommand()
+            };
+        }
+        public static void PrintUsage(IEnumerable<ICommandFactory> availableCommands)
+        {
+            Console.WriteLine("\n\nUsage: commandName Arguments");
+            Console.WriteLine("Commands:");
+            foreach (var command in availableCommands)
+            {
+                Console.WriteLine($"{command.CommandName} {command.CommandArgs}\t- {command.Description}");
+                if (command.CommandAlternates.Any())
+                {
+                    Console.WriteLine("\tAlternates:");
+                    foreach (var altCommand in command.CommandAlternates)
+                        Console.WriteLine($"\t  {altCommand}");
+                }
+            }
+            Console.WriteLine("\n\n");
+        }
         public static void DisplayShapes(string title, IEnumerable<IShape> shapes)
         {
             const int pdName = 35;

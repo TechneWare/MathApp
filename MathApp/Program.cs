@@ -37,6 +37,7 @@ namespace MathApp
             var numQuadrilaterals = deserializedShapes.Where(s => s.ShapeType == ShapeType.Quadrilateral).Count();
             var numSquares = deserializedShapes.Where(s => s.ShapeType == ShapeType.Quadrilateral && s.SubType == "Square").Count();
             var numRects = deserializedShapes.Where(s => s.ShapeType == ShapeType.Quadrilateral && s.SubType == "Rectangle").Count();
+            var unkownTypes = deserializedShapes.Where(s => s.ShapeType == ShapeType.Unknown || s.SubType == "Unknown").Count();
 
             Console.WriteLine($"Circles       : {numCircles}\n\n" +
                               $"Triangles     : {numTriangles}\n" +
@@ -46,7 +47,8 @@ namespace MathApp
                               $"Quadrilaterals: {numQuadrilaterals}\n" +
                               $"--Squares     : {numSquares}\n" +
                               $"--Rectangles  : {numRects}\n\n" +
-                              $"Total Shapes  : {totalShapes}");
+                              $"Total Shapes  : {totalShapes}\n" +
+                              $"Unknown Shapes: {unkownTypes}");
 
             Console.ReadLine();
 

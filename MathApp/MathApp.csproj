@@ -48,6 +48,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\ClearScreenCommand.cs" />
+    <Compile Include="Commands\CommandParser.cs" />
+    <Compile Include="Commands\QuitCommand.cs" />
+    <Compile Include="Commands\StatsCommand.cs" />
+    <Compile Include="Commands\Utils.cs" />
+    <Compile Include="Commands\GetCommand.cs" />
+    <Compile Include="Commands\ICommand.cs" />
+    <Compile Include="Commands\ICommandFactory.cs" />
+    <Compile Include="Commands\JsonCommand.cs" />
+    <Compile Include="Commands\NotFoundCommand.cs" />
     <Compile Include="Data\Constants.cs" />
     <Compile Include="Data\IDataContext.cs" />
     <Compile Include="Data\InMemoryDataContext.cs" />

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MathApp.Data
 {
-    interface IDataContext
+    public interface IDataContext
     {
         IEnumerable<IShape> GetAllShapes(SortBy sortBy);
     }

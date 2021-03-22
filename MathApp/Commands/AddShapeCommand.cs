@@ -44,60 +44,17 @@ namespace MathApp.Commands
         }
         public ICommand MakeCommand(string[] args)
         {
-            //TODO: Refactor to Shape Factory
-            var cmd = new AddShapeCommand(dbContext);
-            this.IsValid = false;
-            if (args.Length > 2)
+            AddShapeCommand cmd = null;
+
+            var builder = new ShapeFactory.ShapeBuilder(Utils.GetAvailableShapeFactories());
+            var newShape = builder.Build(args);
+            if (newShape != null)
             {
-                var type = args[1].ToLower();
-                var name = args[2];
-                switch (type)
+                cmd = new AddShapeCommand(dbContext)
                 {
-                    case string x when x.ToLower().StartsWith("c"):
-                        if (args.Length == 4 && double.TryParse(args[3], out double radius))
-                        {
-                            cmd.newShape = new Circle(name, radius);
-                            cmd.IsValid = true;
-                        }
-                        else
-                            Console.WriteLine("usage: add circle name [radius]");
-                        break;
-                    case string x when x.ToLower().StartsWith("t"):
-                        if (args.Length == 6
-                            && double.TryParse(args[3], out double a)
-                            && double.TryParse(args[4], out double b)
-                            && double.TryParse(args[5], out double c))
-                        {
-                            cmd.newShape = new Triangle(name, a, b, c);
-                            cmd.IsValid = true;
-                        }
-                        else
-                            Console.WriteLine("usage: add triangle name [sideA] [sideB] [sideC]");
-                        break;
-                    case string x when x.ToLower().StartsWith("s"):
-                        if (args.Length == 4 && double.TryParse(args[3], out double width))
-                        {
-                            cmd.newShape = new Square(name, width);
-                            cmd.IsValid = true;
-                        }
-                        else
-                            Console.WriteLine("usage: add square name [width]");
-                        break;
-                    case string y when y.ToLower().StartsWith("r"):
-                        if (args.Length == 5
-                            && double.TryParse(args[3], out double w)
-                            && double.TryParse(args[4], out double l))
-                        {
-                            cmd.newShape = new Rectangle(name, w, l);
-                            cmd.IsValid = true;
-                        }
-                        else
-                            Console.WriteLine("usage: add rectangle name [width] [length]");
-                        break;
-                    default:
-                        Console.WriteLine($"Invalid Type: {type}");
-                        break;
-                }
+                    IsValid = true,
+                    newShape = newShape
+                };
             }
             else
                 Console.WriteLine($"{Description}\nValid [type]'s are: {CommandArgs}");

@@ -60,6 +60,12 @@
     <Compile Include="Commands\DisplayWelcomeCommand.cs" />
     <Compile Include="Commands\QuitCommand.cs" />
     <Compile Include="Commands\RunAllCommand.cs" />
+    <Compile Include="Commands\ShapeFactory\CircleFactory.cs" />
+    <Compile Include="Commands\ShapeFactory\IShapeFactory.cs" />
+    <Compile Include="Commands\ShapeFactory\RectangleFactory.cs" />
+    <Compile Include="Commands\ShapeFactory\ShapeBuilder.cs" />
+    <Compile Include="Commands\ShapeFactory\SquareFactory.cs" />
+    <Compile Include="Commands\ShapeFactory\TriangleFactory.cs" />
     <Compile Include="Commands\SpinnerCommand.cs" />
     <Compile Include="Commands\StatsCommand.cs" />
     <Compile Include="Commands\Utils.cs" />

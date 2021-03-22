@@ -1,4 +1,5 @@
-﻿using MathApp.Shapes;
+﻿using MathApp.Commands.ShapeFactory;
+using MathApp.Shapes;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -26,6 +27,16 @@ namespace MathApp.Commands
                 new DeleteShapeCommand(),
                 new DisplayWelcomeCommand(),
                 new SpinnerCommand()
+            };
+        }
+        public static IEnumerable<IShapeFactory> GetAvailableShapeFactories()
+        {
+            return new IShapeFactory[]
+            {
+                new CircleFactory(),
+                new TriangleFactory(),
+                new SquareFactory(),
+                new RectangleFactory()
             };
         }
         public static void PrintUsage(IEnumerable<ICommandFactory> availableCommands)

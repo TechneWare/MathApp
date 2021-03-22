@@ -44,6 +44,7 @@ namespace MathApp.Commands
         }
         public ICommand MakeCommand(string[] args)
         {
+            //TODO: Refactor to Shape Factory
             var cmd = new AddShapeCommand(dbContext);
             this.IsValid = false;
             if (args.Length > 2)
@@ -71,7 +72,7 @@ namespace MathApp.Commands
                             cmd.IsValid = true;
                         }
                         else
-                            Console.WriteLine("usage: add name triangle [sideA] [sideB] [sideC]");
+                            Console.WriteLine("usage: add triangle name [sideA] [sideB] [sideC]");
                         break;
                     case string x when x.ToLower().StartsWith("s"):
                         if (args.Length == 4 && double.TryParse(args[3], out double width))
@@ -80,7 +81,7 @@ namespace MathApp.Commands
                             cmd.IsValid = true;
                         }
                         else
-                            Console.WriteLine("usage: add name square [width]");
+                            Console.WriteLine("usage: add square name [width]");
                         break;
                     case string y when y.ToLower().StartsWith("r"):
                         if (args.Length == 5
@@ -91,7 +92,7 @@ namespace MathApp.Commands
                             cmd.IsValid = true;
                         }
                         else
-                            Console.WriteLine("usage: add name rectangle [width] [length]");
+                            Console.WriteLine("usage: add rectangle name [width] [length]");
                         break;
                     default:
                         Console.WriteLine($"Invalid Type: {type}");

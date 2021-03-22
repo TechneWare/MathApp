@@ -66,12 +66,14 @@ namespace MathApp
             int curLeft = Console.CursorLeft;
             int curTop = Console.CursorTop;
             var curColor = Console.ForegroundColor;
-            
+
+            Console.CursorVisible = false;
             Console.SetCursorPosition(left, top);
             Console.ForegroundColor = ConsoleColor.Green;
             Console.Write(c);
             Console.SetCursorPosition(curLeft, curTop);
             Console.ForegroundColor = curColor;
+            Console.CursorVisible = true;
         }
 
         private void Turn()

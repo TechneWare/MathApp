@@ -19,7 +19,7 @@ namespace MathApp.Commands
 
         public string[] CommandAlternates => new string[] { };
 
-        public string Description => "Usage: add name [type] [params] | add [type] to see help on params)";
+        public string Description => "Usage: add [type] [name] [params] | add [type] to see help on params)";
 
         public void Execute()
         {
@@ -48,9 +48,9 @@ namespace MathApp.Commands
             this.IsValid = false;
             if (args.Length > 2)
             {
-                var name = args[1];
-                var type = args[2].ToLower();
-                switch (args[1])
+                var type = args[1].ToLower();
+                var name = args[2];
+                switch (type)
                 {
                     case string x when x.ToLower().StartsWith("c"):
                         if (args.Length == 4 && double.TryParse(args[3], out double radius))
@@ -59,7 +59,7 @@ namespace MathApp.Commands
                             cmd.IsValid = true;
                         }
                         else
-                            Console.WriteLine("usage: add name circle [radius]");
+                            Console.WriteLine("usage: add circle name [radius]");
                         break;
                     case string x when x.ToLower().StartsWith("t"):
                         if (args.Length == 6

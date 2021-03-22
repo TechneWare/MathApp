@@ -44,7 +44,7 @@ namespace MathApp
                 spinner.Start();
             }
             else
-                Console.Write(Settings.Prompt);
+                Console.Write(Settings.Prompt, Color.Green);
             string commandInput = Console.ReadLine();
             spinner?.Dispose();
 

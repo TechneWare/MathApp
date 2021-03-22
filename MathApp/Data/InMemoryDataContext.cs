@@ -9,7 +9,7 @@ namespace MathApp.Data
 {
     public class InMemoryDataContext : IDataContext
     {
-        private readonly IEnumerable<IShape> shapes;
+        private IList<IShape> shapes;
         public IEnumerable<IShape> GetAllShapes(SortBy sortBy = SortBy.None)
         {
             IEnumerable<IShape> result = null;
@@ -31,6 +31,30 @@ namespace MathApp.Data
             return result;
         }
 
+        public bool AddShape(IShape shape)
+        {
+            shapes.Add(shape);
+            return true;
+        }
+        public bool ClearShapes()
+        {
+            shapes.Clear();
+            return true;
+        }
+        public bool DeleteShape(string shapeName)
+        {
+            var result = false;
+            
+            var s = shapes.Where(sh => sh.Name.ToLower() == shapeName.ToLower()).FirstOrDefault();
+            if (s != null)
+            {
+                shapes.Remove(s);
+                result = true;
+            }
+
+            return result;
+        }
+        
         public InMemoryDataContext()
         {
             shapes = new List<IShape>()

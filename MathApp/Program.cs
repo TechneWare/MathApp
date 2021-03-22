@@ -1,12 +1,8 @@
 ﻿using MathApp.Commands;
 using MathApp.Data;
-using MathApp.Shapes;
-using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Drawing;
+using Console = Colorful.Console;
 
 namespace MathApp
 {
@@ -18,17 +14,12 @@ namespace MathApp
             var parser = new CommandParser(availableCommands, new InMemoryDataContext());
 
             //Run Startup - demo all commands
-            parser.ParseCommand(new string[] { "RunAll" }).Execute();
-
-            Console.WriteLine("\n\n=== Welcome to the coding demo ===");
-            Console.WriteLine("== Startup Complete: Press ENTER for usage or Q to to quit ==");
+            parser.ParseCommand(new string[] { "RunAll", "Welcome"}).Execute();
 
             ICommand lastCommand = null;
             do
             {
-                Console.Write($"$ ");
-                string commandInput = Console.ReadLine();
-                args = commandInput.Split(' ');
+                args = GetInput().Split(' ');
 
                 if (args.Length == 0 || string.IsNullOrEmpty(args[0]))
                     Utils.PrintUsage(availableCommands);
@@ -42,6 +33,22 @@ namespace MathApp
                     }
                 }
             } while (lastCommand == null || lastCommand.GetType() != typeof(QuitCommand));
+        }
+
+        static string GetInput()
+        {
+            Spinner spinner = null;
+            if (Settings.EnableSpinner)
+            {
+                spinner = new Spinner(Settings.Prompt, 0, Console.CursorTop, 10);
+                spinner.Start();
+            }
+            else
+                Console.Write(Settings.Prompt);
+            string commandInput = Console.ReadLine();
+            spinner?.Dispose();
+
+            return commandInput;
         }
     }
 }

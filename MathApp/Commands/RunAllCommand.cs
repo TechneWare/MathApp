@@ -10,6 +10,7 @@ namespace MathApp.Commands
     public class RunAllCommand : ICommand, ICommandFactory
     {
         private IDataContext dbContext;
+        private bool ShowWelcome { get; set; } = false;
 
         public string CommandName => "RunAll";
 
@@ -24,7 +25,7 @@ namespace MathApp.Commands
             var availableCommands = Utils.GetAvailableCommands();
             var parser = new CommandParser(availableCommands, new InMemoryDataContext());
 
-            string[] allCommands =
+            var allCommands = new List<string>()
             {
                 "Get",
                 "Get area",
@@ -32,6 +33,12 @@ namespace MathApp.Commands
                 "JsonDemo",
                 "Stats"
             };
+
+            if (ShowWelcome)
+            {
+                allCommands.Add("Clear");
+                allCommands.Add("Welcome");
+            }
 
             foreach (var cmd in allCommands)
             {
@@ -41,9 +48,12 @@ namespace MathApp.Commands
             }
         }
         public RunAllCommand()
-        {        }
-        public RunAllCommand(IDataContext dbContext)
+        { }
+        public RunAllCommand(string[] args, IDataContext dbContext)
         {
+            if (args.Length > 1 && args[1] == "Welcome")
+                this.ShowWelcome = true;
+
             this.dbContext = dbContext;
         }
         public ICommand MakeCommand(string[] args)
@@ -53,7 +63,7 @@ namespace MathApp.Commands
 
         public ICommand MakeCommand(string[] args, IDataContext dbContext)
         {
-            return new RunAllCommand(dbContext);
+            return new RunAllCommand(args, dbContext);
         }
     }
 }

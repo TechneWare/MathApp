@@ -1,9 +1,11 @@
 ﻿using MathApp.Shapes;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Console = Colorful.Console;
 
 namespace MathApp.Commands
 {
@@ -18,24 +20,35 @@ namespace MathApp.Commands
                 new GetCommand(),
                 new JsonCommand(),
                 new StatsCommand(),
-                new RunAllCommand()
+                new RunAllCommand(),
+                new AddShapeCommand(),
+                new ClearShapesCommand(),
+                new DeleteShapeCommand(),
+                new DisplayWelcomeCommand(),
+                new SpinnerCommand()
             };
         }
         public static void PrintUsage(IEnumerable<ICommandFactory> availableCommands)
         {
-            Console.WriteLine("\n\nUsage: commandName Arguments");
-            Console.WriteLine("Commands:");
+            Console.WriteLine("\nUsage: commandName Arguments", Color.Green);
+            Console.WriteLine("Commands:", Color.Green);
             foreach (var command in availableCommands)
             {
-                Console.WriteLine($"{command.CommandName} {command.CommandArgs}\t- {command.Description}");
+                string alts = "";
                 if (command.CommandAlternates.Any())
-                {
-                    Console.WriteLine("\tAlternates:");
                     foreach (var altCommand in command.CommandAlternates)
-                        Console.WriteLine($"\t  {altCommand}");
-                }
+                        alts += $" | {altCommand}";
+
+                Console.Write($"{command.CommandName}{alts} {command.CommandArgs}".PadRight(35));
+                Console.WriteLine($"-{ command.Description}");
             }
-            Console.WriteLine("\n\n");
+            Console.WriteLine("==== Examples ===", Color.Green);
+            Console.WriteLine("g\tDisplay shape data unsorted");
+            Console.WriteLine("g a\tDisplay shape data sorted by area");
+            Console.WriteLine("g p\tDisplay shape data by parimter");
+            Console.WriteLine("jd\tRun unsorted shape data through a Json serialization and back again.");
+            Console.WriteLine("s\tDisplay Stats on shape data");
+            Console.WriteLine();
         }
         public static void DisplayShapes(string title, IEnumerable<IShape> shapes)
         {
@@ -46,11 +59,19 @@ namespace MathApp.Commands
             Console.WriteLine($"{"Name".PadRight(pdName)}{"Area".PadRight(pdData)}{"Perimiter".PadRight(pdData)}");
             Console.WriteLine($"{"".PadRight(pdName - 1, '-')} {"".PadRight(pdData - 1, '-')} {"".PadRight(pdData - 1, '-')}");
             foreach (var s in shapes)
-                Console.WriteLine(
-                    $"{s.FullName.PadRight(pdName)}" +
-                    $"{s.Area:f5}".PadLeft(pdData) +
-                    $"{s.Perimeter:f5}".PadLeft(pdData));
+                DisplayShape(s);
         }
+
+        public static void DisplayShape(IShape s)
+        {
+            const int pdName = 35;
+            const int pdData = 10;
+            Console.WriteLine(
+                $"{s.FullName.PadRight(pdName)}" +
+                $"{s.Area:f5}".PadLeft(pdData) +
+                $"{s.Perimeter:f5}".PadLeft(pdData));
+        }
+
         public static void DisplayDataStats(string title, IEnumerable<IShape> shapes)
         {
             Console.WriteLine($"\n{title}");

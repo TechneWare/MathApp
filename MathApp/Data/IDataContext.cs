@@ -10,5 +10,8 @@ namespace MathApp.Data
     public interface IDataContext
     {
         IEnumerable<IShape> GetAllShapes(SortBy sortBy);
+        bool AddShape(IShape shape);
+        bool ClearShapes();
+        bool DeleteShape(string shapeName);
     }
 }

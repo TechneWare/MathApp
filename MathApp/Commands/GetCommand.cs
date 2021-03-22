@@ -14,7 +14,7 @@ namespace MathApp.Commands
 
         public string CommandName => "Get";
 
-        public string CommandArgs => "[blank | area | parimiter]";
+        public string CommandArgs => "[area | parimiter]";
 
         public string[] CommandAlternates => new string[] { "G" };
 
@@ -63,7 +63,6 @@ namespace MathApp.Commands
                         cmd.SortBy = SortBy.None;
                         break;
                 }
-
             }
 
             return cmd;
